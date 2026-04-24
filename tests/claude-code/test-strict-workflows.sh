@@ -36,4 +36,9 @@ assert_contains "$output" "loop\|again\|repeat\|until.*approved\|until.*complian
 assert_contains "$output" "implementer.*fix\|fix.*issues" "Implementer fixes issues" || exit 1
 echo ""
 
+echo "Test 6: strict mode still syncs plan checkboxes..."
+output=$(run_claude "In subagent-driven-development-strict and executing-plans-strict, after each completed task should the executed plan file checkboxes be updated automatically?" 30)
+assert_contains "$output" "yes\|must\|required\|checkbox\|plan file\|plan path\|\\[x\\]" "Strict workflows mention required checkbox sync" || exit 1
+echo ""
+
 echo "=== All strict workflow tests passed ==="

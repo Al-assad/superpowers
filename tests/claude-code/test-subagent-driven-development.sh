@@ -54,4 +54,9 @@ output=$(run_claude "In subagent-driven-development, is it okay to start impleme
 assert_contains "$output" "worktree\|feature.*branch\|not.*main\|never.*main\|avoid.*main\|don't.*main\|consent\|permission" "Warns against main branch" || exit 1
 echo ""
 
+echo "Test 9: Plan checkbox sync..."
+output=$(run_claude "After a task is completed in subagent-driven-development, should the controller update the executed plan file checkboxes automatically?" 30)
+assert_contains "$output" "yes\|must\|required\|checkbox\|plan file\|plan path\|\\[x\\]" "Mentions required plan checkbox sync" || exit 1
+echo ""
+
 echo "=== All subagent-driven-development skill tests passed ==="
