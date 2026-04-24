@@ -30,10 +30,11 @@ Task tool (general-purpose):
 
     Once you're clear on requirements:
     1. Implement exactly what the task specifies
-    2. Add or update tests when the task or repo patterns warrant it
-    3. Run the verification commands the controller provided
-    4. Self-review (see below)
-    5. Report back
+    2. Write tests (following TDD if task says to)
+    3. Verify implementation works
+    4. Commit your work
+    5. Self-review (see below)
+    6. Report back
 
     Work from: [directory]
 
@@ -91,8 +92,8 @@ Task tool (general-purpose):
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
-    - Did I run the required verification commands?
-    - If I added or changed tests, do they cover the behavior that changed?
+    - Did I follow TDD if required?
+    - Are tests comprehensive?
 
     If you find issues during self-review, fix them now before reporting.
 
@@ -109,6 +110,4 @@ Task tool (general-purpose):
     Use DONE_WITH_CONCERNS if you completed the work but have doubts about correctness.
     Use BLOCKED if you cannot complete the task. Use NEEDS_CONTEXT if you need
     information that wasn't provided. Never silently produce work you're unsure about.
-
-    Only create a commit if the controller or task explicitly asks for one.
 ```

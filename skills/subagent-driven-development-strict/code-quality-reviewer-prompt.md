@@ -4,7 +4,7 @@ Use this template when dispatching a code quality reviewer subagent.
 
 **Purpose:** Verify implementation is well-built (clean, tested, maintainable)
 
-**Only dispatch when the controller explicitly requests a quality review for this task.**
+**Only dispatch after spec compliance review passes.**
 
 ```
 Task tool (superpowers:code-reviewer):

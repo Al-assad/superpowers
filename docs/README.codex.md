@@ -64,6 +64,20 @@ Skills are discovered automatically. Codex activates them when:
 - The task matches a skill's description
 - The `using-superpowers` skill directs Codex to use one
 
+### Fast By Default
+
+Superpowers now defaults to the faster planning and execution skills:
+
+- `writing-plans`
+- `executing-plans`
+- `subagent-driven-development`
+
+If you want the original heavier workflow, explicitly ask for:
+
+- `writing-plans-strict`
+- `executing-plans-strict`
+- `subagent-driven-development-strict`
+
 ### Personal Skills
 
 Create your own skills in `~/.agents/skills/`:

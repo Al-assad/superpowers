@@ -1,47 +1,48 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: Use when you have a written implementation plan to execute quickly with task-level verification in a separate session
 ---
 
 # Executing Plans
 
 ## Overview
 
-Load plan, review critically, execute all tasks, report when complete.
+Load plan, sanity-check it, execute tasks, and verify results. This is the fast-by-default execution workflow: it keeps the up-front plan review, but removes the old mandatory checkpoint-heavy cadence.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
-**Note:** Tell your human partner that Superpowers works much better with access to subagents. The quality of its work will be significantly higher if run on a platform with subagent support (such as Claude Code or Codex). If subagents are available, use superpowers:subagent-driven-development instead of this skill.
+**Note:** If subagents are available and the tasks are mostly independent, prefer `superpowers:subagent-driven-development`. If the human wants the original heavier review workflow, use `superpowers:executing-plans-strict`.
 
 ## The Process
 
 ### Step 1: Load and Review Plan
 1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
-3. If concerns: Raise them with your human partner before starting
+2. Review critically - identify any missing context, contradictions, or risky assumptions
+3. If the plan has critical gaps or would obviously send you down the wrong path, raise them before starting
 4. If no concerns: Create TodoWrite and proceed
 
 ### Step 2: Execute Tasks
 
 For each task:
 1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+2. Implement the task as written
+3. Run the verification commands from the task's `Verify` section
+4. Note any meaningful deviation from the plan before moving on
+5. Mark as completed
 
 ### Step 3: Complete Development
 
-After all tasks complete and verified:
+After all tasks complete and key verifications pass:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use superpowers:finishing-a-development-branch
-- Follow that skill to verify tests, present options, execute choice
+- Follow that skill to verify the final state, present options, execute choice
 
 ## When to Stop and Ask for Help
 
 **STOP executing immediately when:**
 - Hit a blocker (missing dependency, test fails, instruction unclear)
 - Plan has critical gaps preventing starting
-- You don't understand an instruction
+- The task turns out to require migrations, compatibility work, or architecture decisions the fast plan does not cover
 - Verification fails repeatedly
 
 **Ask for clarification rather than guessing.**
@@ -56,9 +57,9 @@ After all tasks complete and verified:
 
 ## Remember
 - Review plan critically first
-- Follow plan steps exactly
+- Follow the task intent exactly, even if the fast plan uses broader task units
 - Don't skip verifications
-- Reference skills when plan says to
+- Report meaningful plan drift instead of silently improvising
 - Stop when blocked, don't guess
 - Never start implementation on main/master branch without explicit user consent
 
@@ -68,3 +69,6 @@ After all tasks complete and verified:
 - **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **superpowers:writing-plans** - Creates the plan this skill executes
 - **superpowers:finishing-a-development-branch** - Complete development after all tasks
+
+**Strict alternative:**
+- **superpowers:executing-plans-strict** - Use when the human explicitly wants the original checkpoint-heavy workflow

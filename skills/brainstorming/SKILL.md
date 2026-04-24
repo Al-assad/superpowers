@@ -29,7 +29,7 @@ You MUST create a task for each of these items and complete them in order:
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec review loop** — dispatch spec-document-reviewer subagent with precisely crafted review context (never your session history); fix issues and re-dispatch until approved (max 3 iterations, then surface to human)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+9. **Transition to implementation** — invoke `writing-plans` by default, or `writing-plans-strict` when the work is high-risk or the human explicitly wants the original heavier workflow
 
 ## Process Flow
 
@@ -46,7 +46,7 @@ digraph brainstorming {
     "Spec review loop" [shape=box];
     "Spec review passed?" [shape=diamond];
     "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+    "Invoke writing-plans\n(or writing-plans-strict\nfor high-risk work)" [shape=doublecircle];
 
     "Explore project context" -> "Visual questions ahead?";
     "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
@@ -62,11 +62,11 @@ digraph brainstorming {
     "Spec review passed?" -> "Spec review loop" [label="issues found,\nfix and re-dispatch"];
     "Spec review passed?" -> "User reviews spec?" [label="approved"];
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
+    "User reviews spec?" -> "Invoke writing-plans\n(or writing-plans-strict\nfor high-risk work)" [label="approved"];
 }
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+**The terminal state is invoking planning.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The next step is `writing-plans` by default, or `writing-plans-strict` if the work is high-risk or the human explicitly asks for the original heavy-review path.
 
 ## The Process
 
@@ -113,6 +113,7 @@ digraph brainstorming {
 
 - Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
   - (User preferences for spec location override this default)
+- Optionally add `Recommended Execution Mode: fast` or `Recommended Execution Mode: strict` near the top of the spec when the risk level is clear
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git
 
@@ -132,8 +133,9 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 **Implementation:**
 
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
+- Invoke `writing-plans` to create the default fast implementation plan
+- Use `writing-plans-strict` instead if the work involves migrations, unstable interfaces, destructive changes, or the human explicitly asks for the original strict flow
+- Do NOT invoke any other implementation skill at this stage
 
 ## Key Principles
 

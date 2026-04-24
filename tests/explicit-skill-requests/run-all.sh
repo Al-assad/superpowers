@@ -58,6 +58,39 @@ else
 fi
 echo ""
 
+# Test: writing-plans-strict, please
+echo ">>> Test 5: writing-plans-strict-please"
+if "$SCRIPT_DIR/run-test.sh" "writing-plans-strict" "$PROMPTS_DIR/writing-plans-strict-please.txt"; then
+    PASSED=$((PASSED + 1))
+    RESULTS="$RESULTS\nPASS: writing-plans-strict-please"
+else
+    FAILED=$((FAILED + 1))
+    RESULTS="$RESULTS\nFAIL: writing-plans-strict-please"
+fi
+echo ""
+
+# Test: executing-plans-strict, please
+echo ">>> Test 6: executing-plans-strict-please"
+if "$SCRIPT_DIR/run-test.sh" "executing-plans-strict" "$PROMPTS_DIR/executing-plans-strict-please.txt"; then
+    PASSED=$((PASSED + 1))
+    RESULTS="$RESULTS\nPASS: executing-plans-strict-please"
+else
+    FAILED=$((FAILED + 1))
+    RESULTS="$RESULTS\nFAIL: executing-plans-strict-please"
+fi
+echo ""
+
+# Test: subagent-driven-development-strict, please
+echo ">>> Test 7: subagent-driven-development-strict-please"
+if "$SCRIPT_DIR/run-test.sh" "subagent-driven-development-strict" "$PROMPTS_DIR/subagent-driven-development-strict-please.txt"; then
+    PASSED=$((PASSED + 1))
+    RESULTS="$RESULTS\nPASS: subagent-driven-development-strict-please"
+else
+    FAILED=$((FAILED + 1))
+    RESULTS="$RESULTS\nFAIL: subagent-driven-development-strict-please"
+fi
+echo ""
+
 echo "=== Summary ==="
 echo -e "$RESULTS"
 echo ""

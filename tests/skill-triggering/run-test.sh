@@ -7,6 +7,35 @@
 
 set -e
 
+run_with_timeout() {
+    local timeout_seconds="$1"
+    shift
+
+    if command -v timeout >/dev/null 2>&1; then
+        timeout "$timeout_seconds" "$@"
+        return $?
+    fi
+
+    if command -v gtimeout >/dev/null 2>&1; then
+        gtimeout "$timeout_seconds" "$@"
+        return $?
+    fi
+
+    python3 - "$timeout_seconds" "$@" <<'PY'
+import subprocess
+import sys
+
+timeout_seconds = int(sys.argv[1])
+cmd = sys.argv[2:]
+
+try:
+    completed = subprocess.run(cmd, timeout=timeout_seconds)
+    raise SystemExit(completed.returncode)
+except subprocess.TimeoutExpired:
+    raise SystemExit(124)
+PY
+}
+
 SKILL_NAME="$1"
 PROMPT_FILE="$2"
 MAX_TURNS="${3:-3}"
@@ -45,7 +74,7 @@ cd "$OUTPUT_DIR"
 
 echo "Plugin dir: $PLUGIN_DIR"
 echo "Running claude -p with naive prompt..."
-timeout 300 claude -p "$PROMPT" \
+run_with_timeout 300 claude -p "$PROMPT" \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \
     --max-turns "$MAX_TURNS" \

@@ -1,6 +1,35 @@
 #!/usr/bin/env bash
 # Helper functions for Claude Code skill tests
 
+run_with_timeout() {
+    local timeout_seconds="$1"
+    shift
+
+    if command -v timeout >/dev/null 2>&1; then
+        timeout "$timeout_seconds" "$@"
+        return $?
+    fi
+
+    if command -v gtimeout >/dev/null 2>&1; then
+        gtimeout "$timeout_seconds" "$@"
+        return $?
+    fi
+
+    python3 - "$timeout_seconds" "$@" <<'PY'
+import subprocess
+import sys
+
+timeout_seconds = int(sys.argv[1])
+cmd = sys.argv[2:]
+
+try:
+    completed = subprocess.run(cmd, timeout=timeout_seconds)
+    raise SystemExit(completed.returncode)
+except subprocess.TimeoutExpired:
+    raise SystemExit(124)
+PY
+}
+
 # Run Claude Code with a prompt and capture output
 # Usage: run_claude "prompt text" [timeout_seconds] [allowed_tools]
 run_claude() {
@@ -8,15 +37,17 @@ run_claude() {
     local timeout="${2:-60}"
     local allowed_tools="${3:-}"
     local output_file=$(mktemp)
+    local plugin_dir
+    plugin_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
     # Build command
-    local cmd="claude -p \"$prompt\""
+    local cmd="cd \"$plugin_dir\" && claude -p \"$prompt\" --plugin-dir \"$plugin_dir\" --dangerously-skip-permissions --max-turns 1"
     if [ -n "$allowed_tools" ]; then
         cmd="$cmd --allowed-tools=$allowed_tools"
     fi
 
     # Run Claude in headless mode with timeout
-    if timeout "$timeout" bash -c "$cmd" > "$output_file" 2>&1; then
+    if run_with_timeout "$timeout" bash -c "$cmd" > "$output_file" 2>&1; then
         cat "$output_file"
         rm -f "$output_file"
         return 0
@@ -193,6 +224,7 @@ EOF
 
 # Export functions for use in tests
 export -f run_claude
+export -f run_with_timeout
 export -f assert_contains
 export -f assert_not_contains
 export -f assert_count

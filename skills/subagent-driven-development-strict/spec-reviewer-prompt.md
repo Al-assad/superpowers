@@ -4,8 +4,6 @@ Use this template when dispatching a spec compliance reviewer subagent.
 
 **Purpose:** Verify implementer built what was requested (nothing more, nothing less)
 
-**Only dispatch when the controller explicitly requests a spec review for this task.**
-
 ```
 Task tool (general-purpose):
   description: "Review spec compliance for Task N"

@@ -85,12 +85,19 @@ echo "=== All tests passed ==="
 #### test-subagent-driven-development.sh
 Tests skill content and requirements (~2 minutes):
 - Skill loading and accessibility
-- Workflow ordering (spec compliance before code quality)
+- Fast-by-default behavior (conditional reviewers)
 - Self-review requirements documented
 - Plan reading efficiency documented
-- Spec compliance reviewer skepticism documented
-- Review loops documented
+- Reviewer escalation triggers documented
 - Task context provision documented
+
+#### test-strict-workflows.sh
+Tests the explicit `-strict` variants (~2 minutes):
+- `writing-plans` is fast by default
+- `writing-plans-strict` keeps TDD micro-steps
+- `executing-plans-strict` remains the heavier option
+- `subagent-driven-development-strict` keeps spec-before-quality ordering
+- Strict review loops remain intact
 
 ### Integration Tests (use --integration flag)
 
@@ -103,15 +110,13 @@ Full workflow execution test (~10-30 minutes):
   - Plan read once at start (not per task)
   - Full task text provided in subagent prompts
   - Subagents perform self-review before reporting
-  - Spec compliance review happens before code quality
-  - Spec reviewer reads code independently
   - Working implementation is produced
   - Tests pass
-  - Proper git commits created
+  - Fast path completes without requiring per-task commits
 
 **What it tests:**
 - The workflow actually works end-to-end
-- Our improvements are actually applied
+- The default fast workflow is actually applied
 - Subagents follow the skill correctly
 - Final code is functional and tested
 
@@ -125,7 +130,7 @@ Full workflow execution test (~10-30 minutes):
 
 ## Timeout Considerations
 
-- Default timeout: 5 minutes per test
+- Default timeout: 10 minutes per test
 - Claude Code may take time to respond
 - Adjust with `--timeout` if needed
 - Tests should be focused to avoid long runs
