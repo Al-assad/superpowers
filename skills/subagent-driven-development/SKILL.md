@@ -53,7 +53,7 @@ digraph process {
         "Dispatch exactly one reviewer" [shape=box];
         "Reviewer approves?" [shape=diamond];
         "Implementer subagent fixes issues" [shape=box];
-        "Mark task complete in TodoWrite\n+ update plan checkbox" [shape=box];
+        "Mark task complete in TodoWrite" [shape=box];
     }
 
     "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
@@ -67,13 +67,13 @@ digraph process {
     "Answer questions, provide context" -> "Dispatch implementer subagent (./implementer-prompt.md)";
     "Implementer subagent asks questions?" -> "Implementer subagent implements, tests, self-reviews" [label="no"];
     "Implementer subagent implements, tests, self-reviews" -> "Need reviewer?";
-    "Need reviewer?" -> "Mark task complete in TodoWrite\n+ update plan checkbox" [label="no"];
+    "Need reviewer?" -> "Mark task complete in TodoWrite" [label="no"];
     "Need reviewer?" -> "Dispatch exactly one reviewer" [label="yes"];
     "Dispatch exactly one reviewer" -> "Reviewer approves?";
     "Reviewer approves?" -> "Implementer subagent fixes issues" [label="no"];
     "Implementer subagent fixes issues" -> "Dispatch exactly one reviewer" [label="re-review"];
-    "Reviewer approves?" -> "Mark task complete in TodoWrite\n+ update plan checkbox" [label="yes"];
-    "Mark task complete in TodoWrite\n+ update plan checkbox" -> "More tasks remain?";
+    "Reviewer approves?" -> "Mark task complete in TodoWrite" [label="yes"];
+    "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Optional final review for overall risk" [label="no"];
     "Optional final review for overall risk" -> "Use superpowers:finishing-a-development-branch";
@@ -129,20 +129,6 @@ Choose the reviewer based on the risk:
 - **Code quality reviewer** when the main risk is maintainability, decomposition, or implementation quality
 
 If the human explicitly wants the old two-review gate for every task, use `superpowers:subagent-driven-development-strict` instead.
-
-## Plan Checkbox Sync (Required)
-
-Progress tracking has two layers: `TodoWrite` (runtime state) and plan checkbox updates (persistent state in the Step 1 plan file).
-Use the exact file path read at start (typically `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`, unless the human provided a different path).
-
-When a task is complete (either directly accepted or reviewer-approved), the controller must immediately update the plan file:
-
-- Mark the corresponding unchecked checkbox from `- [ ]` to `- [x]`
-- If the task has no checkbox, add one under that task heading and mark it complete
-- Do not check anything while reviewer issues are still open
-- Announce which plan file item was updated before moving to the next task
-
-The controller owns this file update. Implementer/reviewer subagents should not edit the plan file unless explicitly instructed.
 
 ## Prompt Templates
 
@@ -240,7 +226,6 @@ Done!
 - Accept "close enough" when a reviewer found issues
 - Skip review loops (reviewer found issues = implementer fixes = review again)
 - Let an implementer concern slide without deciding whether it needs review
-- Move to the next task without syncing the plan checkbox state
 
 **If subagent asks questions:**
 - Answer clearly and completely

@@ -27,8 +27,7 @@ For each task:
 1. Mark as in_progress
 2. Follow each step exactly (plan has bite-sized steps)
 3. Run verifications as specified
-4. Mark as completed in TodoWrite
-5. Update the corresponding checkbox in the plan file loaded in Step 1
+4. Mark as completed
 
 ### Step 3: Complete Development
 
@@ -55,24 +54,11 @@ After all tasks complete and verified:
 
 **Don't force through blockers** - stop and ask.
 
-## Plan Checkbox Sync (Required)
-
-Strict execution must keep the Step 1 plan file checkboxes synchronized with task completion.
-Use the exact file path provided for execution (typically `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`, unless the human provided a different path).
-
-After each completed task:
-
-- Change the matching checkbox from `- [ ]` to `- [x]`
-- If the task section has no checkbox, add one under that task heading and mark it complete
-- Do not mark completion while task verification is failing
-- Report which checkbox was updated before moving on
-
 ## Remember
 - Review plan critically first
 - Follow plan steps exactly
 - Don't skip verifications
 - Reference skills when plan says to
-- Keep plan checkbox state in sync with runtime task state
 - Stop when blocked, don't guess
 - Never start implementation on main/master branch without explicit user consent
 

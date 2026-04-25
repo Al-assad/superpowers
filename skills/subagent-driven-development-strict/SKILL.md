@@ -55,7 +55,7 @@ digraph process {
         "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [shape=box];
         "Code quality reviewer subagent approves?" [shape=diamond];
         "Implementer subagent fixes quality issues" [shape=box];
-        "Mark task complete in TodoWrite\n+ update plan checkbox" [shape=box];
+        "Mark task complete in TodoWrite" [shape=box];
     }
 
     "Read plan, extract all tasks with full text, note context, create TodoWrite" [shape=box];
@@ -76,8 +76,8 @@ digraph process {
     "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" -> "Code quality reviewer subagent approves?";
     "Code quality reviewer subagent approves?" -> "Implementer subagent fixes quality issues" [label="no"];
     "Implementer subagent fixes quality issues" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="re-review"];
-    "Code quality reviewer subagent approves?" -> "Mark task complete in TodoWrite\n+ update plan checkbox" [label="yes"];
-    "Mark task complete in TodoWrite\n+ update plan checkbox" -> "More tasks remain?";
+    "Code quality reviewer subagent approves?" -> "Mark task complete in TodoWrite" [label="yes"];
+    "Mark task complete in TodoWrite" -> "More tasks remain?";
     "More tasks remain?" -> "Dispatch implementer subagent (./implementer-prompt.md)" [label="yes"];
     "More tasks remain?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
     "Dispatch final code reviewer subagent for entire implementation" -> "Use superpowers:finishing-a-development-branch";
@@ -116,20 +116,6 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 4. If the plan itself is wrong, escalate to the human
 
 **Never** ignore an escalation or force the same model to retry without changes. If the implementer said it's stuck, something needs to change.
-
-## Plan Checkbox Sync (Required)
-
-In strict mode, the Step 1 plan file checkboxes are the source of truth for execution progress.
-Use the exact file path read at start (typically `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`, unless the human provided a different path).
-
-When a task passes both required reviews and is marked complete in `TodoWrite`, the controller must immediately update the plan file:
-
-- Mark the matching unchecked checkbox from `- [ ]` to `- [x]`
-- If the task section has no checkbox, add one under the task heading and mark it complete
-- Do not mark completion while any review issue remains unresolved
-- Announce which checkbox was updated before dispatching the next task
-
-The controller performs this plan edit. Implementer/reviewer subagents do not update plan tracking unless explicitly instructed.
 
 ## Prompt Templates
 
@@ -172,7 +158,6 @@ The controller performs this plan edit. Implementer/reviewer subagents do not up
 - Let implementer self-review replace actual review (both are needed)
 - **Start code quality review before spec compliance is ✅** (wrong order)
 - Move to next task while either review has open issues
-- Move to next task without syncing the plan checkbox state
 
 ## Integration
 
